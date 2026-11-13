@@ -1,0 +1,5 @@
+torch>=2.2
+transformers>=4.40
+accelerate>=0.28
+pytest>=8.0
+matplotlib>=3.8

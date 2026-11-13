@@ -1,0 +1,155 @@
+{
+  "timestamp_utc": "2026-11-13T18:15:27.050306+00:00",
+  "url": "http://127.0.0.1:8000",
+  "server": {
+    "status": "ok",
+    "model": "sshleifer/tiny-gpt2",
+    "device": "cpu"
+  },
+  "prompt_file": "benchmarks/phase2_prompts.jsonl",
+  "warmup_rounds": 1,
+  "repeat": 3,
+  "request_metrics": {
+    "requests": 9,
+    "overall": {
+      "requests": 9,
+      "metrics": {
+        "server_ttft_seconds": {
+          "p50": 0.0019442909979261458,
+          "p95": 0.0022441998007707298
+        },
+        "client_ttft_seconds": {
+          "p50": 0.0026587499887682498,
+          "p95": 0.0029821504140272737
+        },
+        "server_mean_inter_token_latency_ms": {
+          "p50": 0.6128087789923149,
+          "p95": 0.6479923653766879
+        },
+        "client_mean_inter_token_latency_ms": {
+          "p50": 0.6114649157480974,
+          "p95": 0.6464011396688729
+        },
+        "server_total_seconds": {
+          "p50": 0.04172654199646786,
+          "p95": 0.06178633299423381
+        },
+        "client_total_seconds": {
+          "p50": 0.04241949997958727,
+          "p95": 0.06250425019534304
+        },
+        "server_tokens_per_second": {
+          "p50": 1592.5394044339305,
+          "p95": 1690.4439670636382
+        }
+      }
+    },
+    "by_workload": {
+      "14 prompt tokens / 48 new tokens": {
+        "prompt_tokens": 14,
+        "requested_new_tokens": 48,
+        "requests": 3,
+        "metrics": {
+          "server_ttft_seconds": {
+            "p50": 0.0019179170194547623,
+            "p95": 0.0019416536000790075
+          },
+          "client_ttft_seconds": {
+            "p50": 0.002764374978141859,
+            "p95": 0.0029165875108446925
+          },
+          "server_mean_inter_token_latency_ms": {
+            "p50": 0.5713670212339531,
+            "p95": 0.6351186169999989
+          },
+          "client_mean_inter_token_latency_ms": {
+            "p50": 0.5716241065145252,
+            "p95": 0.6317382087643715
+          },
+          "server_total_seconds": {
+            "p50": 0.02899575000628829,
+            "p95": 0.03196661219990347
+          },
+          "client_total_seconds": {
+            "p50": 0.030065166007261723,
+            "p95": 0.03273546690470539
+          },
+          "server_tokens_per_second": {
+            "p50": 1655.4150173591051,
+            "p95": 1698.282987243552
+          }
+        }
+      },
+      "37 prompt tokens / 64 new tokens": {
+        "prompt_tokens": 37,
+        "requested_new_tokens": 64,
+        "requests": 3,
+        "metrics": {
+          "server_ttft_seconds": {
+            "p50": 0.0020566669991239905,
+            "p95": 0.00207845421100501
+          },
+          "client_ttft_seconds": {
+            "p50": 0.0026300410099793226,
+            "p95": 0.0027948913048021495
+          },
+          "server_mean_inter_token_latency_ms": {
+            "p50": 0.627616396827978,
+            "p95": 0.6494289111634273
+          },
+          "client_mean_inter_token_latency_ms": {
+            "p50": 0.6246713012279499,
+            "p95": 0.6486772585915224
+          },
+          "server_total_seconds": {
+            "p50": 0.04172654199646786,
+            "p95": 0.043029291098355314
+          },
+          "client_total_seconds": {
+            "p50": 0.04241949997958727,
+            "p95": 0.0437653744185809
+          },
+          "server_tokens_per_second": {
+            "p50": 1533.795923118134,
+            "p95": 1588.9517498990456
+          }
+        }
+      },
+      "114 prompt tokens / 96 new tokens": {
+        "prompt_tokens": 114,
+        "requested_new_tokens": 96,
+        "requests": 3,
+        "metrics": {
+          "server_ttft_seconds": {
+            "p50": 0.0019817920110654086,
+            "p95": 0.002315953894867562
+          },
+          "client_ttft_seconds": {
+            "p50": 0.0026587499887682498,
+            "p95": 0.002979000611230731
+          },
+          "server_mean_inter_token_latency_ms": {
+            "p50": 0.6128087789923149,
+            "p95": 0.6355179767859609
+          },
+          "client_mean_inter_token_latency_ms": {
+            "p50": 0.6114649157480974,
+            "p95": 0.6362338631266826
+          },
+          "server_total_seconds": {
+            "p50": 0.06028108298778534,
+            "p95": 0.06253895799745805
+          },
+          "client_total_seconds": {
+            "p50": 0.06100774998776615,
+            "p95": 0.0632525002991315
+          },
+          "server_tokens_per_second": {
+            "p50": 1592.5394044339305,
+            "p95": 1663.6406380751168
+          }
+        }
+      }
+    }
+  }
+}

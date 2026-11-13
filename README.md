@@ -36,9 +36,23 @@ python decode_benchmark.py \
   --new-tokens 64
 ```
 
-The script reports generated text, execution time, tokens per second, and peak GPU memory when CUDA is available. It appends per-mode measurements to `results/phase1_results.csv` and writes a comparison plot to `results/phase1_comparison.png`. Override either path with `--results-csv` or `--plot`; pass `--no-plot` to skip plotting.
+For each configuration, the script reports median decode time, median throughput, speedup, and output agreement. On CUDA it also records peak allocated GPU memory. Raw per-mode trials are appended to `results/phase1_repeated_results.csv`, and the median sweep plot is written to `results/phase1_sweep.png`. Override these paths with `--results-csv` and `--plot`; pass `--no-plot` to skip plotting.
 
-Each run compares greedy decoding with and without a KV cache. Repeat with different `--new-tokens` and prompt lengths to see how the tradeoff changes; treat single-run timings as directional, not production benchmarks.
+Each configuration uses one warm-up per mode and five measured trials by default; measured order alternates to reduce order bias.
+
+Sweep prompt and generation lengths on a CUDA machine:
+
+```bash
+python decode_benchmark.py \
+  --model gpt2 \
+  --device cuda \
+  --prompt-lengths 7,64,256 \
+  --token-counts 64,128 \
+  --warmup-runs 1 \
+  --repeat-runs 5
+```
+
+`--prompt-lengths` constructs exact token lengths by repeating or truncating the tokenized `--prompt`; this controls context size but does not represent natural long prompts. For realistic prompt distributions, use representative text inputs. `--new-tokens` remains the single generation-length option when `--token-counts` is omitted.
 
 ## Repository roadmap
 

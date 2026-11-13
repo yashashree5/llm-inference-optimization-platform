@@ -42,9 +42,10 @@ identical text.
 This is one short run on a tiny model, without warmup or repeated trials, so
 timing noise and launch overhead are significant. The result supports that the
 cache path is wired correctly and can reduce repeated computation; it does not
-predict throughput or memory behavior for larger models or GPU serving. The
-benchmark now appends raw per-mode metrics to `results/phase1_results.csv` and
-creates `results/phase1_comparison.png` for each run.
+predict throughput or memory behavior for larger models or GPU serving. At that
+time, the script wrote `results/phase1_results.csv` and
+`results/phase1_comparison.png`. The controlled runner now defaults to
+`results/phase1_repeated_results.csv` and `results/phase1_sweep.png`.
 
 ## Colab T4 follow-up
 
@@ -69,3 +70,33 @@ not a stable performance claim. The peak allocated GPU memory was 536.61 MB
 uncached and 494.24 MB cached in these runs; this does not mean KV caching
 generally saves memory, since cached key/value tensors grow with context length
 and the tiny model's weights and transient allocations dominate this sample.
+
+## Controlled T4 sweep
+
+To reduce the timing noise, the runner now warms up each mode once and alternates
+which mode runs first across five measured trials. On a Tesla T4 with `gpt2`, it
+tested prompt lengths of 7, 64, and 256 tokens against generations of 64 and 128
+tokens. All 30 paired comparisons (60 raw mode rows) produced matching output.
+
+| Prompt tokens | Generated tokens | Uncached median | Cached median | Median speedup |
+| ---: | ---: | ---: | ---: | ---: |
+| 7 | 64 | 0.5467s | 0.4996s | 1.10x |
+| 7 | 128 | 1.2018s | 0.9971s | 1.19x |
+| 64 | 64 | 0.6292s | 0.5078s | 1.21x |
+| 64 | 128 | 1.5715s | 0.9855s | 1.59x |
+| 256 | 64 | 1.7196s | 0.5000s | 3.38x |
+| 256 | 128 | 4.0756s | 1.1169s | 3.65x |
+
+The longer prompts show the expected effect: uncached decoding repeatedly
+reprocesses more historical tokens, while cached decoding computes the prompt
+once and then passes only the newest token. It still attends over the cached
+history, so KV caching does not make each step independent of context length.
+The 7-token cases have little historical work to avoid, so fixed overhead
+limits the speedup.
+
+Raw trials are in `results/phase1_t4_controlled.csv`; the chart of medians is in
+`results/phase1_t4_controlled.png`. The prompt-length sweep repeats/truncates
+the original token IDs to reach each requested size, so the 64- and 256-token
+prompts are synthetic. Five trials and order alternation improve this experiment
+over the first run, but results still depend on this model, device, and prompt
+construction and should not be treated as production throughput claims.

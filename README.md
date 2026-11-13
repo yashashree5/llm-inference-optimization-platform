@@ -54,6 +54,38 @@ python decode_benchmark.py \
 
 `--prompt-lengths` constructs exact token lengths by repeating or truncating the tokenized `--prompt`; this controls context size but does not represent natural long prompts. For realistic prompt distributions, use representative text inputs. `--new-tokens` remains the single generation-length option when `--token-counts` is omitted.
 
+## Phase 2: single-request streaming server
+
+Install the requirements, then start the server. It loads the model once at startup; set `MODEL_NAME` or `INFERENCE_DEVICE` to override the defaults.
+
+```bash
+uvicorn serve:app --host 127.0.0.1 --port 8000
+```
+
+Check readiness and stream a greedy completion using Server-Sent Events:
+
+```bash
+curl http://127.0.0.1:8000/health
+curl -N http://127.0.0.1:8000/generate \
+  -H 'Content-Type: application/json' \
+  -d '{"prompt":"The future of efficient machine learning is","max_new_tokens":32}'
+```
+
+`/generate` emits one `token` event per generated token, followed by a `done` event with time to first token (TTFT), mean inter-token latency (ITL), total time, and token count. This learning server serializes generation requests over one model; concurrent scheduling and batching are Phase 3.
+
+Run the API tests with `pytest -q`.
+
+Benchmark a prompt set sequentially after warming each prompt once:
+
+```bash
+python benchmark_server.py \
+  --prompts benchmarks/phase2_prompts.jsonl \
+  --warmup-rounds 1 \
+  --repeat 3
+```
+
+The JSONL prompt file accepts one object per line with `id`, `prompt`, and optional `max_new_tokens`. The client records client-observed and server-reported TTFT, ITL, total time, and output tokens/sec, then writes request rows to `results/phase2_server_requests.jsonl` and p50/p95 summaries overall and by exact input/output token lengths to `results/phase2_server_summary.json`. Prompt text is not copied into results. This is sequential single-request latency testing, not concurrent throughput testing.
+
 ## Repository roadmap
 
 - `phase1/`: model execution, manual decoding, KV-cache behavior

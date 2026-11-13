@@ -1,0 +1,7 @@
+timestamp_utc,model,device,prompt_tokens,generated_tokens,mode,seconds,tokens_per_second,peak_memory_mb,outputs_match,speedup_vs_uncached
+2026-11-13T05:32:17.787540+00:00,gpt2,cuda,7,128,uncached,2.240441,57.1316,536.61,True,1.0000
+2026-11-13T05:32:17.787540+00:00,gpt2,cuda,7,128,cached,0.953812,134.1984,494.24,True,2.3489
+2026-11-13T05:33:03.416001+00:00,gpt2,cuda,7,128,uncached,1.504644,85.0699,536.61,True,1.0000
+2026-11-13T05:33:03.416001+00:00,gpt2,cuda,7,128,cached,0.986339,129.7728,494.24,True,1.5255
+2026-11-13T05:33:22.914196+00:00,gpt2,cuda,7,128,uncached,1.473666,86.8582,536.61,True,1.0000
+2026-11-13T05:33:22.914196+00:00,gpt2,cuda,7,128,cached,1.319115,97.0347,494.24,True,1.1172

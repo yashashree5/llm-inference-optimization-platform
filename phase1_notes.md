@@ -45,3 +45,27 @@ cache path is wired correctly and can reduce repeated computation; it does not
 predict throughput or memory behavior for larger models or GPU serving. The
 benchmark now appends raw per-mode metrics to `results/phase1_results.csv` and
 creates `results/phase1_comparison.png` for each run.
+
+## Colab T4 follow-up
+
+The same script was run three times on a Colab Tesla T4 with `gpt2`, a 7-token
+prompt, and 128 generated tokens. All three cached and uncached runs produced
+identical text. Median uncached time was 1.5046 seconds (85.07 tokens/sec); the
+cached median was 0.9863 seconds (129.77 tokens/sec), or a 1.53x median
+speedup. Individual speedups ranged from 1.12x to 2.35x, showing substantial
+run-to-run variation in this single-pass benchmark.
+
+The GPU measurements are recorded in `results/phase1_t4.csv`; the companion
+chart, `results/phase1_t4_comparison.png`, summarizes the median times and
+throughput. The output shows why caching helps: later decoding steps pass only
+the newest token and reuse prior keys and values instead of recomputing the
+whole prefix. The CUDA run is much faster in absolute time than the tiny-model
+CPU run, but their speedup ratios are not directly comparable because the model
+and token count differ.
+
+The benchmark has no warmup and alternates neither run order nor multiple
+samples within a process. Treat the median as a useful learning measurement,
+not a stable performance claim. The peak allocated GPU memory was 536.61 MB
+uncached and 494.24 MB cached in these runs; this does not mean KV caching
+generally saves memory, since cached key/value tensors grow with context length
+and the tiny model's weights and transient allocations dominate this sample.
